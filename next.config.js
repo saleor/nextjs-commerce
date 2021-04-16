@@ -7,12 +7,16 @@ const {
 const provider = commerce.provider || getProviderName()
 const isBC = provider === 'bigcommerce'
 const isShopify = provider === 'shopify'
+const isSaleor = provider === 'saleor'
 
 module.exports = withCommerceConfig({
   commerce,
   i18n: {
     locales: ['en-US', 'es'],
     defaultLocale: 'en-US',
+  },
+  images: {
+    domains: [process.env.COMMERCE_IMAGE_HOST],
   },
   rewrites() {
     return [
