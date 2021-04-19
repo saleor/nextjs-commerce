@@ -1,7 +1,7 @@
 import { Product } from '@commerce/types'
 import { getConfig, SaleorConfig } from '../api'
 import fetchAllProducts from '../api/utils/fetch-all-products'
-import { ProductEdge } from '../schema'
+import { ProductCountableEdge } from '../schema'
 import getAllProductsPathsQuery from '../utils/queries/get-all-products-paths-query'
 
 type ProductPath = {
@@ -21,7 +21,7 @@ const getAllProductPaths = async (options?: {
   config?: SaleorConfig
   preview?: boolean
 }): Promise<ReturnType> => {
-  let { config, variables = { first: 250 } } = options ?? {}
+  let { config, variables = { first: 100 } } = options ?? {}
   config = getConfig(config)
 
   const products = await fetchAllProducts({
@@ -31,9 +31,9 @@ const getAllProductPaths = async (options?: {
   })
 
   return {
-    products: products?.map(({ node: { handle } }: ProductEdge) => ({
+    products: products?.map(({ node: { slug } }: ProductCountableEdge) => ({
       node: {
-        path: `/${handle}`,
+        path: `/${slug}`,
       },
     })),
   }

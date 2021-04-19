@@ -9,6 +9,7 @@ Demo live at: [demo.vercel.store](https://demo.vercel.store/)
 
 - Shopify Demo: https://shopify.demo.vercel.store/
 - BigCommerce Demo: https://bigcommerce.demo.vercel.store/
+- Saleor Demo: https://saleor.demo.vercel.store/
 
 ## Features
 
@@ -24,7 +25,7 @@ Demo live at: [demo.vercel.store](https://demo.vercel.store/)
 
 ## Integrations
 
-Next.js Commerce integrates out-of-the-box with BigCommerce and Shopify. We plan to support all major ecommerce backends.
+Next.js Commerce integrates out-of-the-box with BigCommerce, Shopify and Saleor. We plan to support all major ecommerce backends.
 
 ## Considerations
 

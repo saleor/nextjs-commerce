@@ -1,5 +1,5 @@
 import { getConfig, SaleorConfig } from '../api'
-import { PageEdge } from '../schema'
+import { PageCountableEdge } from '../schema'
 import { getAllPagesQuery } from '../utils/queries'
 
 type Variables = {
@@ -23,15 +23,15 @@ const getAllPages = async (options?: {
   config: SaleorConfig
   preview?: boolean
 }): Promise<ReturnType> => {
-  let { config, variables = { first: 250 } } = options ?? {}
+  let { config, variables = { first: 100 } } = options ?? {}
   config = getConfig(config)
   const { locale } = config
   const { data } = await config.fetch(getAllPagesQuery, { variables })
 
   const pages = data.pages?.edges?.map(
-    ({ node: { title: name, handle, ...node } }: PageEdge) => ({
+    ({ node: { title: name, slug, ...node } }: PageCountableEdge) => ({
       ...node,
-      url: `/${locale}/${handle}`,
+      url: `/${locale}/${slug}`,
       name,
     })
   )

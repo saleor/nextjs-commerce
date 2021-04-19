@@ -1,7 +1,7 @@
 import { SWRHook } from '@commerce/utils/types'
 import useSearch, { UseSearch } from '@commerce/product/use-search'
 
-import { ProductEdge } from '../schema'
+import { ProductCountableEdge } from '../schema'
 import {
   getAllProductsQuery,
   getCollectionProductsQuery,
@@ -46,18 +46,21 @@ export const handler: SWRHook<
 
     if (categoryId) {
       edges = data.node?.products?.edges ?? []
-      if (brandId) {
-        edges = edges.filter(
-          ({ node: { vendor } }: ProductEdge) =>
-            vendor.replace(/\s+/g, '-').toLowerCase() === brandId
-        )
-      }
+      // FIXME @zaiste, no `vendor` in Saleor
+      // if (brandId) {
+      //   edges = edges.filter(
+      //     ({ node: { vendor } }: ProductCountableEdge) =>
+      //       vendor.replace(/\s+/g, '-').toLowerCase() === brandId
+      //   )
+      // }
     } else {
       edges = data.products?.edges ?? []
     }
 
     return {
-      products: edges.map(({ node }: ProductEdge) => normalizeProduct(node)),
+      products: edges.map(({ node }: ProductCountableEdge) =>
+        normalizeProduct(node)
+      ),
       found: !!edges.length,
     }
   },
