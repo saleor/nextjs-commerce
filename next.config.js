@@ -10,6 +10,9 @@ const isShopify = provider === 'shopify'
 const isSaleor = provider === 'saleor'
 
 module.exports = withCommerceConfig({
+  future: {
+    webpack5: true,
+  },
   commerce,
   i18n: {
     locales: ['en-US', 'es'],
