@@ -1,61 +1,55 @@
 export const checkoutDetailsFragment = `
   id
-  webUrl
-  subtotalPriceV2{
-    amount
-    currencyCode
-  }
-  totalTaxV2 {
-    amount
-    currencyCode
-  }
-  totalPriceV2 {
-    amount
-    currencyCode
-  }
-  completedAt
-  createdAt
-  taxesIncluded
-  lineItems(first: 250) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
+  token
+  created
+
+  totalPrice {
+    currency
+    gross {
+      amount
     }
-    edges {
-      node {
-        id
-        title
-        variant {
-          id
-          sku
-          title
-          image {
-            originalSrc
-            altText
-            width
-            height
-          }
-          priceV2{
+  }
+  subtotalPrice {
+    currency
+    gross {
+      amount
+    }
+  }
+
+  lines {
+    id
+    variant {
+      id
+      name
+      sku
+      product {
+        slug
+      }
+      media {
+        url
+      }
+      pricing {
+        price {
+          gross {
             amount
-            currencyCode
-          }
-          compareAtPriceV2{
-            amount
-            currencyCode
-          }
-          product {
-            handle
           }
         }
-        quantity
+        
+      }
+    }
+    quantity
+    totalPrice {
+      currency
+      gross {
+        amount
       }
     }
   }
 `
 
 const getCheckoutQuery = /* GraphQL */ `
-  query($checkoutId: ID!) {
-    node(id: $checkoutId) {
+  query($checkoutId: UUID!) {
+    checkout(token: $checkoutId) {
       ... on Checkout {
         ${checkoutDetailsFragment}
       }

@@ -1,16 +1,16 @@
 import { checkoutDetailsFragment } from '../queries/get-checkout-query'
 
 const checkoutLineItemUpdateMutation = /* GraphQL */ `
-  mutation checkoutLineItemUpdate($checkoutId: ID!, $lineItems: [CheckoutLineItemUpdateInput!]!) {
-    checkoutLineItemsUpdate(checkoutId: $checkoutId, lineItems: $lineItems) {
-      checkoutUserErrors {
+  mutation checkoutLineItemUpdate($checkoutId: ID!, $lineItems: [CheckoutLineInput!]!) {
+    checkoutLinesUpdate(checkoutId: $checkoutId, lines: $lineItems) {
+      errors {
         code
         field
         message
       }
-      # checkout {
-      #   ${checkoutDetailsFragment}
-      # }
+      checkout {
+        ${checkoutDetailsFragment}
+      }
     }
   }
 `
