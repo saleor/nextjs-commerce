@@ -5,6 +5,7 @@ import {
   Checkout,
   CheckoutLine,
   Money,
+  ProductVariant,
 } from '../schema'
 
 import type { Cart, LineItem } from '../types'
@@ -19,59 +20,55 @@ const money = ({ amount, currency }: Money) => {
   }
 }
 
-const normalizeProductOptions = (options: ProductOption[]) => {
-  return options?.map(({ id, name: displayName, values }) => ({
-    __typename: 'MultipleChoiceOption',
-    id,
-    displayName,
-    // values: values.map((value) => {
-    //   let output: any = {
-    //     label: value,
-    //   }
-    //   if (displayName.match(/colou?r/gi)) {
-    //     output = {
-    //       ...output,
-    //       hexColors: [value],
-    //     }
-    //   }
-    //   return output
-    // })
-    values: [],
-  }))
+const normalizeProductOptions = (options: ProductVariant[]) => {
+  return options
+    ?.map((option) => option?.attributes)
+    .flat(1)
+    .reduce<any>((acc, x) => {
+      if (
+        acc.find(({ displayName }: any) => displayName === x.attribute.name)
+      ) {
+        return acc.map((opt: any) => {
+          return opt.displayName === x.attribute.name
+            ? {
+                ...opt,
+                values: [
+                  ...opt.values,
+                  ...x.values.map((value: any) => ({
+                    label: value?.name,
+                  })),
+                ],
+              }
+            : opt
+        })
+      }
+
+      return acc.concat({
+        __typename: 'MultipleChoiceOption',
+        displayName: x.attribute.name,
+        variant: 'size',
+        values: x.values.map((value: any) => ({
+          label: value?.name,
+        })),
+      })
+    }, [])
 }
 
-const normalizeProductImages = (images: any) =>
-  images.map(({ node: { originalSrc: url, ...rest } }) => ({
-    url,
-    ...rest,
-  }))
+const normalizeProductVariants = (variants: ProductVariant[]) => {
+  return variants?.map((variant) => {
+    const { id, sku, name, pricing } = variant
+    const price = pricing?.price?.net && money(pricing.price.net)?.value
 
-const normalizeProductVariants = (variants: any) => {
-  return variants?.map(
-    ({ id, selectedOptions, sku, name, priceV2, pricing }) => {
-      const price = money(pricing?.price?.net)?.value
-
-      console.log({ price })
-
-      return {
-        id,
-        name,
-        sku: sku ?? id,
-        price,
-        listPrice: price,
-        requiresShipping: true,
-        // options: selectedOptions.map(({ name, value }: SelectedOption) => {
-        //   const options = normalizeProductOption({
-        //     id,
-        //     name,
-        //     values: [value],
-        //   })
-        //   return options
-        // }),
-        options: [],
-      }
+    return {
+      id,
+      name,
+      sku: sku ?? id,
+      price,
+      listPrice: price,
+      requiresShipping: true,
+      options: normalizeProductOptions([variant]),
     }
-  )
+  })
 }
 
 export function normalizeProduct(productNode: SaleorProduct): Product {
@@ -83,7 +80,6 @@ export function normalizeProduct(productNode: SaleorProduct): Product {
     description,
     slug,
     pricing,
-    // options,
     ...rest
   } = productNode
 
@@ -91,14 +87,21 @@ export function normalizeProduct(productNode: SaleorProduct): Product {
     id,
     name,
     vendor: '',
-    description,
+    description: description
+      ? JSON.parse(description)?.blocks[0]?.data.text
+      : '',
     path: `/${slug}`,
     slug: slug?.replace(/^\/+|\/+$/g, ''),
-    price: money(pricing?.priceRange?.start?.net) || 0,
+    price:
+      (pricing?.priceRange?.start?.net &&
+        money(pricing.priceRange.start.net)) ||
+      0,
     // TODO: Check nextjs-commerce bug if no images are added for a product
     images: media?.length ? media : [{ url: placeholderImg }],
-    variants: variants ? normalizeProductVariants(variants) : [],
-    options: variants ? normalizeProductOptions(variants) : [],
+    variants:
+      variants && variants.length > 0 ? normalizeProductVariants(variants) : [],
+    options:
+      variants && variants.length > 0 ? normalizeProductOptions(variants) : [],
     ...rest,
   }
 
