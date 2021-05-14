@@ -1,5 +1,4 @@
 import { SaleorConfig } from '../api'
-import { CollectionEdge } from '../schema'
 import getSiteCollectionsQuery from './queries/get-all-collections-query'
 
 export type Category = {
@@ -17,7 +16,7 @@ const getCategories = async (config: SaleorConfig): Promise<Category[]> => {
 
   return (
     data.collections?.edges?.map(
-      ({ node: { id: entityId, name, slug } }: CollectionEdge) => ({
+      ({ node: { id: entityId, name, slug } }: any) => ({
         entityId,
         name,
         path: `/${slug}`,

@@ -72,16 +72,8 @@ const normalizeProductVariants = (variants: ProductVariant[]) => {
 }
 
 export function normalizeProduct(productNode: SaleorProduct): Product {
-  const {
-    id,
-    name,
-    media,
-    variants,
-    description,
-    slug,
-    pricing,
-    ...rest
-  } = productNode
+  const { id, name, media, variants, description, slug, pricing, ...rest } =
+    productNode
 
   const product = {
     id,
@@ -92,25 +84,30 @@ export function normalizeProduct(productNode: SaleorProduct): Product {
       : '',
     path: `/${slug}`,
     slug: slug?.replace(/^\/+|\/+$/g, ''),
-    price:
-      (pricing?.priceRange?.start?.net &&
-        money(pricing.priceRange.start.net)) ||
-      0,
+    price: (pricing?.priceRange?.start?.net &&
+      money(pricing.priceRange.start.net)) || {
+      value: 0,
+      currencyCode: 'USD',
+    },
     // TODO: Check nextjs-commerce bug if no images are added for a product
     images: media?.length ? media : [{ url: placeholderImg }],
     variants:
-      variants && variants.length > 0 ? normalizeProductVariants(variants) : [],
+      variants && variants.length > 0
+        ? normalizeProductVariants(variants as ProductVariant[])
+        : [],
     options:
-      variants && variants.length > 0 ? normalizeProductOptions(variants) : [],
-    ...rest,
+      variants && variants?.length > 0
+        ? normalizeProductOptions(variants as ProductVariant[])
+        : [],
   }
 
   return product
 }
 
 export function normalizeCart(checkout: Checkout): Cart {
-  const lines = checkout.lines as CheckoutLine[]; 
-  const lineItems: LineItem[] = lines.length > 0 ? lines?.map<LineItem>(normalizeLineItem) : [];
+  const lines = checkout.lines as CheckoutLine[]
+  const lineItems: LineItem[] =
+    lines.length > 0 ? lines?.map<LineItem>(normalizeLineItem) : []
 
   return {
     id: checkout.id,
@@ -118,12 +115,12 @@ export function normalizeCart(checkout: Checkout): Cart {
     email: '',
     createdAt: checkout.created,
     currency: {
-      code: checkout.totalPrice?.currency!
+      code: checkout.totalPrice?.currency!,
     },
     taxesIncluded: false,
-    lineItems, 
-    lineItemsSubtotalPrice: checkout.subtotalPrice?.gross?.amount!, 
-    subtotalPrice: checkout.subtotalPrice?.gross?.amount!, 
+    lineItems,
+    lineItemsSubtotalPrice: checkout.subtotalPrice?.gross?.amount!,
+    subtotalPrice: checkout.subtotalPrice?.gross?.amount!,
     totalPrice: checkout.totalPrice?.gross.amount!,
     discounts: [],
   }
@@ -141,14 +138,14 @@ function normalizeLineItem({ id, variant, quantity }: CheckoutLine): LineItem {
       sku: variant?.sku ?? '',
       name: variant?.name!,
       image: {
-        url: variant?.media![0].url ?? '/product-img-placeholder.svg',
+        url: variant?.media![0].url ?? placeholderImg,
       },
       requiresShipping: false,
       price: variant?.pricing?.price?.gross.amount!,
-      listPrice: 0 
+      listPrice: 0,
     },
     path: String(variant?.product?.slug),
     discounts: [],
-    options: [ ],
+    options: [],
   }
 }

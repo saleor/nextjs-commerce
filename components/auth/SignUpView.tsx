@@ -34,9 +34,11 @@ const SignUpView: FC<Props> = () => {
       setMessage('')
       await signup({
         email,
-        firstName,
-        lastName,
         password,
+        metadata: [
+          { key: 'firstName', value: firstName },
+          { key: 'lastName', value: lastName },
+        ],
       })
       setLoading(false)
       closeModal()

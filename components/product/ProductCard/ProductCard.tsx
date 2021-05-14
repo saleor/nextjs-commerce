@@ -39,7 +39,7 @@ const ProductCard: FC<Props> = ({
               height={320}
               width={320}
               layout="fixed"
-              {...imgProps}
+              {...(imgProps as any)}
             />
           )}
         </div>
@@ -75,7 +75,7 @@ const ProductCard: FC<Props> = ({
                 width={540}
                 quality="85"
                 layout="responsive"
-                {...imgProps}
+                {...(imgProps as any)}
               />
             )}
           </div>
