@@ -34,7 +34,7 @@ const getProductQuery = /* GraphQL */ `
           }
         }
       }
-      images {
+      media {
         url
         alt
       }
