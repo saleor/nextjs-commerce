@@ -7,11 +7,12 @@ import {
   CheckoutError,
   Checkout,
   Maybe,
+  CheckoutLineDelete,
 } from '../schema'
 
 import { normalizeCart } from './normalize'
 import throwUserErrors from './throw-user-errors'
-import getCheckoutId from './get-checkout-id'
+import { CommerceError } from '@commerce/utils/errors'
 
 export type CheckoutQuery = {
   checkout: Checkout
@@ -21,28 +22,21 @@ export type CheckoutQuery = {
 export type CheckoutPayload =
   | CheckoutLinesAdd
   | CheckoutLinesUpdate
+  | CheckoutLineDelete
   | CheckoutCreate
   | CheckoutQuery
-
-const emptyCart = {
-  id: getCheckoutId().checkoutId,
-  lineItems: [],
-  lineItemsSubtotalPrice: 0,
-  createdAt: new Date().toDateString(),
-  currency: { code: 'USD' },
-  subtotalPrice: 0,
-  taxesIncluded: false,
-  totalPrice: 0,
-}
 
 const checkoutToCart = (checkoutPayload?: Maybe<CheckoutPayload>): Cart => {
   const checkout = checkoutPayload?.checkout
   throwUserErrors(checkoutPayload?.errors)
 
+  if (!checkout) {
+    throw new CommerceError({
+      message: 'Missing checkout object from response',
+    })
+  }
   // when last item is deleted mutations returns null checkout
-  return checkoutPayload?.checkout
-    ? normalizeCart(checkoutPayload?.checkout)
-    : emptyCart
+  return normalizeCart(checkout)
 }
 
 export default checkoutToCart

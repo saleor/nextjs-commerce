@@ -31,30 +31,32 @@ export const handler: SWRHook<
         },
       })
 
-      checkout = data;
+      checkout = data
     }
 
     if (checkout?.completedAt || !checkoutId) {
       checkout = await checkoutCreate(fetch)
     }
 
-    return checkoutToCart(checkout);
+    return checkoutToCart(checkout)
   },
-  useHook: ({ useData }) => (input) => {
-    const response = useData({
-      swrOptions: { revalidateOnFocus: false, ...input?.swrOptions },
-    })
-    return useMemo(
-      () =>
-        Object.create(response, {
-          isEmpty: {
-            get() {
-              return (response.data?.lineItems.length ?? 0) <= 0
+  useHook:
+    ({ useData }) =>
+    (input) => {
+      const response = useData({
+        swrOptions: { revalidateOnFocus: false, ...input?.swrOptions },
+      })
+      return useMemo(
+        () =>
+          Object.create(response, {
+            isEmpty: {
+              get() {
+                return (response.data?.lineItems.length ?? 0) <= 0
+              },
+              enumerable: true,
             },
-            enumerable: true,
-          },
-        }),
-      [response]
-    )
-  },
+          }),
+        [response]
+      )
+    },
 }

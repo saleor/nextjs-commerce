@@ -2,7 +2,6 @@ import { SWRHook } from '@commerce/utils/types'
 import useSearch, { UseSearch } from '@commerce/product/use-search'
 
 import { ProductCountableEdge } from '../schema'
-
 import {
   getAllProductsQuery,
   getSearchVariables,
@@ -34,28 +33,13 @@ export const handler: SWRHook<
     query: getAllProductsQuery,
   },
   async fetcher({ input, options, fetch }) {
-    const { categoryId, brandId } = input
-
     const data = await fetch({
       query: options.query,
-      method: options.method,
+      method: options?.method,
       variables: getSearchVariables(input),
     })
 
-    let edges
-
-    if (categoryId) {
-      edges = data.node?.products?.edges ?? []
-      // FIXME @zaiste, no `vendor` in Saleor
-      // if (brandId) {
-      //   edges = edges.filter(
-      //     ({ node: { vendor } }: ProductCountableEdge) =>
-      //       vendor.replace(/\s+/g, '-').toLowerCase() === brandId
-      //   )
-      // }
-    } else {
-      edges = data.products?.edges ?? []
-    }
+    const edges = data.products?.edges ?? []
 
     return {
       products: edges.map(({ node }: ProductCountableEdge) =>

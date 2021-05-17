@@ -3,8 +3,8 @@ import fetch from './fetch'
 
 import { API_URL } from '../../const'
 import { getError } from '../../utils/handle-fetch-response'
-import { getConfig } from '..'
 import { getToken } from '@framework/utils'
+import { FetcherError } from '@commerce/utils/errors'
 
 const fetchGraphqlApi: GraphQLFetcher = async (
   query: string,
@@ -12,14 +12,15 @@ const fetchGraphqlApi: GraphQLFetcher = async (
   fetchOptions
 ) => {
   // FIXME @zaiste follow the bigcommerce example
-  const config = getConfig()
-  const token = getToken();
+  const token = getToken()
 
-  const res = await fetch(API_URL || '', {
+  const res = await fetch(API_URL!, {
     ...fetchOptions,
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${token}`,
+      ...(token && {
+        Authorization: `Bearer ${token}`,
+      }),
       ...fetchOptions?.headers,
       'Content-Type': 'application/json',
     },

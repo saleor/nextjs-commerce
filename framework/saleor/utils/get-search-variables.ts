@@ -2,14 +2,13 @@ import getSortVariables from './get-sort-variables'
 import type { SearchProductsInput } from '../product/use-search'
 
 export const getSearchVariables = ({
-  brandId,
-  search,
   categoryId,
+  search,
   sort,
 }: SearchProductsInput) => {
   return {
     categoryId,
-    filter: { search },
+    filter: { search, ...(categoryId && { collections: [categoryId] }) },
     sortBy: getSortVariables(sort),
   }
 }

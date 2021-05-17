@@ -37,38 +37,37 @@ export const handler = {
     options,
     fetch,
   }: HookFetcherContext<RemoveCartItemBody>) {
-    const data = await fetch<Mutation, MutationCheckoutLineDeleteArgs>({
+    const { checkoutLineDelete } = await fetch<
+      Mutation,
+      MutationCheckoutLineDeleteArgs
+    >({
       ...options,
-      variables: { 
-        checkoutId: getCheckoutId().checkoutId, 
-        lineId: itemId 
+      variables: {
+        checkoutId: getCheckoutId().checkoutId,
+        lineId: itemId,
       },
     })
-    return checkoutToCart(data.checkoutLinesUpdate)
+    return checkoutToCart(checkoutLineDelete)
   },
-  useHook: ({
-    fetch,
-  }: MutationHookContext<Cart | null, RemoveCartItemBody>) => <
-    T extends LineItem | undefined = undefined
-  >(
-    ctx: { item?: T } = {}
-  ) => {
-    const { item } = ctx
-    const { mutate } = useCart()
-    const removeItem: RemoveItemFn<LineItem> = async (input) => {
-      const itemId = input?.id ?? item?.id
+  useHook:
+    ({ fetch }: MutationHookContext<Cart | null, RemoveCartItemBody>) =>
+    <T extends LineItem | undefined = undefined>(ctx: { item?: T } = {}) => {
+      const { item } = ctx
+      const { mutate } = useCart()
+      const removeItem: RemoveItemFn<LineItem> = async (input) => {
+        const itemId = input?.id ?? item?.id
 
-      if (!itemId) {
-        throw new ValidationError({
-          message: 'Invalid input used for this operation',
-        })
+        if (!itemId) {
+          throw new ValidationError({
+            message: 'Invalid input used for this operation',
+          })
+        }
+
+        const data = await fetch({ input: { itemId } })
+        await mutate(data, false)
+        return data
       }
 
-      const data = await fetch({ input: { itemId } })
-      await mutate(data, false)
-      return data
-    }
-
-    return useCallback(removeItem as RemoveItemFn<T>, [fetch, mutate])
-  },
+      return useCallback(removeItem as RemoveItemFn<T>, [fetch, mutate])
+    },
 }

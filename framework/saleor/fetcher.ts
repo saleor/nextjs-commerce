@@ -1,4 +1,4 @@
-import { CommerceError } from '@commerce/utils/errors'
+import { FetcherError } from '@commerce/utils/errors'
 import { Fetcher } from '@commerce/utils/types'
 import { API_URL } from './const'
 import { getToken, handleFetchResponse } from './utils'
@@ -10,22 +10,18 @@ const fetcher: Fetcher = async ({
   query,
 }) => {
   const token = getToken()
-
-  try {
-    return handleFetchResponse(
-      await fetch(url!, {
-        method,
-        body: JSON.stringify({ query, variables }),
-        headers: {
+  return handleFetchResponse(
+    await fetch(url!, {
+      method,
+      body: JSON.stringify({ query, variables }),
+      headers: {
+        ...(token && {
           Authorization: `JWT ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-    )
-  } catch (error) {
-    console.error(error)
-    throw new CommerceError({ message: error?.message || 'Internal Error' })
-  }
+        }),
+        'Content-Type': 'application/json',
+      },
+    })
+  )
 }
 
 export default fetcher
