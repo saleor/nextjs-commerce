@@ -35,7 +35,7 @@ const checkoutToCart = (checkoutPayload?: Maybe<CheckoutPayload>): Cart => {
       message: 'Missing checkout object from response',
     })
   }
-  // when last item is deleted mutations returns null checkout
+
   return normalizeCart(checkout)
 }
 
