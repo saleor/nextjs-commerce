@@ -10,7 +10,7 @@ export const getSearchVariables = ({
   return {
     categoryId,
     filter: { search },
-    ...getSortVariables(sort, !!categoryId),
+    sortBy: getSortVariables(sort),
   }
 }
 

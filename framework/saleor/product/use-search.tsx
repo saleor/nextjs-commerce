@@ -2,9 +2,9 @@ import { SWRHook } from '@commerce/utils/types'
 import useSearch, { UseSearch } from '@commerce/product/use-search'
 
 import { ProductCountableEdge } from '../schema'
+
 import {
   getAllProductsQuery,
-  getCollectionProductsQuery,
   getSearchVariables,
   normalizeProduct,
 } from '../utils'
@@ -37,8 +37,8 @@ export const handler: SWRHook<
     const { categoryId, brandId } = input
 
     const data = await fetch({
-      query: categoryId ? getCollectionProductsQuery : options.query,
-      method: options?.method,
+      query: options.query,
+      method: options.method,
       variables: getSearchVariables(input),
     })
 
@@ -64,18 +64,20 @@ export const handler: SWRHook<
       found: !!edges.length,
     }
   },
-  useHook: ({ useData }) => (input = {}) => {
-    return useData({
-      input: [
-        ['search', input.search],
-        ['categoryId', input.categoryId],
-        ['brandId', input.brandId],
-        ['sort', input.sort],
-      ],
-      swrOptions: {
-        revalidateOnFocus: false,
-        ...input.swrOptions,
-      },
-    })
-  },
+  useHook:
+    ({ useData }) =>
+    (input = {}) => {
+      return useData({
+        input: [
+          ['search', input.search],
+          ['categoryId', input.categoryId],
+          ['brandId', input.brandId],
+          ['sort', input.sort],
+        ],
+        swrOptions: {
+          revalidateOnFocus: false,
+          ...input.swrOptions,
+        },
+      })
+    },
 }

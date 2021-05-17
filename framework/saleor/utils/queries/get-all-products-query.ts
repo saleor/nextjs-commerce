@@ -33,8 +33,14 @@ const getAllProductsQuery = /* GraphQL */ `
     $first: Int = 100
     $filter: ProductFilterInput
     $channel: String = "default-channel"
+    $sortBy: ProductOrder
   ) {
-    products(first: $first, channel: $channel, filter: $filter) {
+    products(
+      first: $first
+      channel: $channel
+      filter: $filter
+      sortBy: $sortBy
+    ) {
       ...productConnnection
     }
   }

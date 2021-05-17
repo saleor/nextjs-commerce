@@ -1,4 +1,4 @@
-import { FetcherError } from '@commerce/utils/errors'
+import { CommerceError, FetcherError } from '@commerce/utils/errors'
 
 export function getError(errors: any[], status: number) {
   errors = errors ?? [{ message: 'Failed to fetch Saleor API' }]
@@ -20,7 +20,6 @@ const handleFetchResponse = async (res: Response) => {
 
     return data
   }
-
   throw await getAsyncError(res)
 }
 

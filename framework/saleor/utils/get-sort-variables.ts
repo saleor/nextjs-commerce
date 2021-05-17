@@ -1,31 +1,49 @@
-const getSortVariables = (sort?: string, isCategory: boolean = false) => {
-  let output = {}
+import { API_CHANNEL } from '@framework/const'
+
+const getSortVariables = (sort?: string) => {
+  const channel = API_CHANNEL
+
+  let output
   switch (sort) {
     case 'price-asc':
       output = {
-        sortKey: 'PRICE',
-        reverse: false,
+        field: 'MINIMAL_PRICE',
+        direction: 'ASC',
+        channel,
       }
       break
     case 'price-desc':
       output = {
-        sortKey: 'PRICE',
-        reverse: true,
+        field: 'MINIMAL_PRICE',
+        direction: 'DESC',
+        channel,
       }
       break
     case 'trending-desc':
       output = {
-        sortKey: 'BEST_SELLING',
-        reverse: false,
+        field: 'DATE',
+        direction: 'DESC',
+        channel,
       }
       break
-    case 'latest-desc':
+
+    case 'latest-asc':
       output = {
-        sortKey: isCategory ? 'CREATED' : 'CREATED_AT',
-        reverse: true,
+        field: 'DATE',
+        direction: 'ASC',
+        channel,
       }
       break
+
+    case 'latest-desc':
+    default:
+      output = {
+        field: 'DATE',
+        direction: 'DESC',
+        channel,
+      }
   }
+
   return output
 }
 
