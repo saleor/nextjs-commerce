@@ -1,4 +1,4 @@
-export const checkoutDetailsFragment = `
+export const CheckoutDetails = `
   id
   token
   created
@@ -46,14 +46,3 @@ export const checkoutDetailsFragment = `
     }
   }
 `
-
-const getCheckoutQuery = /* GraphQL */ `
-  query($checkoutId: UUID!) {
-    checkout(token: $checkoutId) {
-      ... on Checkout {
-        ${checkoutDetailsFragment}
-      }
-    }
-  }
-`
-export default getCheckoutQuery

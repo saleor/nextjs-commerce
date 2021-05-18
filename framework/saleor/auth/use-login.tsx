@@ -1,20 +1,21 @@
 import { useCallback } from 'react'
+
 import type { MutationHook } from '@commerce/utils/types'
 import { CommerceError } from '@commerce/utils/errors'
 import useCustomer from '../customer/use-customer'
-import tokenCreateMutation from '../utils/mutations/customer-access-token-create'
+import * as mutation from '../utils/mutations'
 import {
   Mutation,
   MutationTokenCreateArgs,
 } from '../schema'
 import useLogin, { UseLogin } from '@commerce/auth/use-login'
-import { setCSRFToken, setToken, throwUserErrors } from '../utils'
+import { setCSRFToken, setToken, throwUserErrors, checkoutAttach, getCheckoutId } from '../utils'
 
 export default useLogin as UseLogin<typeof handler>
 
 export const handler: MutationHook<null, {}, MutationTokenCreateArgs> = {
   fetchOptions: {
-    query: tokenCreateMutation,
+    query: mutation.SessionCreate,
   },
   async fetcher({ input: { email, password }, options, fetch }) {
     if (!(email && password)) {
@@ -39,6 +40,14 @@ export const handler: MutationHook<null, {}, MutationTokenCreateArgs> = {
     if (token && csrfToken) {
       setToken(token)
       setCSRFToken(csrfToken)
+      
+      const { checkoutId } = getCheckoutId();
+      checkoutAttach(fetch, { 
+        variables: { checkoutId },
+        headers: {
+          Authorization: `JWT ${token}`
+        }
+      })
     }
 
     return null
