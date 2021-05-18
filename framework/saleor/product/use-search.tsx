@@ -26,6 +26,8 @@ export const handler: SWRHook<SearchProductsData, SearchProductsInput, SearchPro
     query: query.ProductMany,
   },
   async fetcher({ input, options, fetch }) {
+    const { categoryId } = input
+
     const data = await fetch({
       query: categoryId ? query.CollectionOne : options.query,
       method: options?.method,

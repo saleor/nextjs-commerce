@@ -20,14 +20,14 @@ export default useRemoveItem as UseRemoveItem<typeof handler>
 export const handler = {
   fetchOptions: { query: mutation.CheckoutLineDelete },
   async fetcher({ input: { itemId }, options, fetch }: HookFetcherContext<RemoveCartItemBody>) {
-    const { checkoutLineDelete } = await fetch<Mutation, MutationCheckoutLineDeleteArgs>({
+    const data = await fetch<Mutation, MutationCheckoutLineDeleteArgs>({
       ...options,
       variables: {
         checkoutId: getCheckoutId().checkoutId,
         lineId: itemId,
       },
     })
-    return checkoutToCart(checkoutLineDelete)
+    return checkoutToCart(data.checkoutLineDelete)
   },
   useHook:
     ({ fetch }: MutationHookContext<Cart | null, RemoveCartItemBody>) =>
