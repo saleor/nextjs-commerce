@@ -6,7 +6,7 @@ import useCustomer from '../customer/use-customer'
 import {
   AccountRegisterInput,
   Mutation,
-  MutationAccountRegisterArgs
+  MutationAccountRegisterArgs,
 } from '../schema'
 
 import { customerCreateMutation } from '../utils/mutations'
@@ -14,20 +14,11 @@ import { handleAutomaticLogin, throwUserErrors } from '../utils'
 
 export default useSignup as UseSignup<typeof handler>
 
-export const handler: MutationHook<
-  null,
-  {},
-  AccountRegisterInput,
-  AccountRegisterInput
-> = {
+export const handler: MutationHook<null, {}, any, AccountRegisterInput> = {
   fetchOptions: {
     query: customerCreateMutation,
   },
-  async fetcher({
-    input: { email, password },
-    options,
-    fetch,
-  }) {
+  async fetcher({ input: { email, password }, options, fetch }) {
     if (!(email && password)) {
       throw new CommerceError({
         message:
@@ -53,16 +44,18 @@ export const handler: MutationHook<
 
     return null
   },
-  useHook: ({ fetch }) => () => {
-    const { revalidate } = useCustomer()
+  useHook:
+    ({ fetch }) =>
+    () => {
+      const { revalidate } = useCustomer()
 
-    return useCallback(
-      async function signup(input) {
-        const data = await fetch({ input })
-        await revalidate()
-        return data
-      },
-      [fetch, revalidate]
-    )
-  },
+      return useCallback(
+        async function signup(input) {
+          const data = await fetch({ input })
+          await revalidate()
+          return data
+        },
+        [fetch, revalidate]
+      )
+    },
 }
