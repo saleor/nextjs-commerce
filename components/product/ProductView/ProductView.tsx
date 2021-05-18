@@ -19,27 +19,27 @@ interface Props {
 
 const ProductView: FC<Props> = ({ product }) => {
   const addItem = useAddItem()
-  const { price } = usePrice({
-    amount: product.price.value,
-    baseAmount: product.price.retailPrice,
-    currencyCode: product.price.currencyCode!,
-  })
   const { openSidebar } = useUI()
   const [loading, setLoading] = useState(false)
   const [choices, setChoices] = useState<SelectedOptions>({})
 
+  const variant = getVariant(product, choices)
+
+  const { price } = usePrice({
+    amount: variant?.price!.value || product.price.value,
+    baseAmount: variant?.price!.retailPrice || product.price.retailPrice,
+    currencyCode: variant?.price!.currencyCode! || product.price.currencyCode!,
+  })
+
   useEffect(() => {
     // Selects the default option
-    const options = product.variants[0].options || [];
-    options.forEach((v) => {
+    product.variants[0].options?.forEach((v) => {
       setChoices((choices) => ({
         ...choices,
         [v.displayName.toLowerCase()]: v.values[0]?.label.toLowerCase(),
       }))
     })
   }, [])
-
-  const variant = getVariant(product, choices)
 
   const addToCart = async () => {
     setLoading(true)
