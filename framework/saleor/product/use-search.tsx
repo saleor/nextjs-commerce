@@ -1,14 +1,11 @@
 import { SWRHook } from '@commerce/utils/types'
+import { Product } from '@commerce/types'
 import useSearch, { UseSearch } from '@commerce/product/use-search'
 
 import { ProductCountableEdge } from '../schema'
-import {
-  getAllProductsQuery,
-  getSearchVariables,
-  normalizeProduct,
-} from '../utils'
+import { getSearchVariables, normalizeProduct } from '../utils'
 
-import { Product } from '@commerce/types'
+import * as query from '../utils/queries'
 
 export default useSearch as UseSearch<typeof handler>
 
@@ -24,27 +21,34 @@ export type SearchProductsData = {
   found: boolean
 }
 
-export const handler: SWRHook<
-  SearchProductsData,
-  SearchProductsInput,
-  SearchProductsInput
-> = {
+export const handler: SWRHook<SearchProductsData, SearchProductsInput, SearchProductsInput> = {
   fetchOptions: {
-    query: getAllProductsQuery,
+    query: query.ProductMany,
   },
   async fetcher({ input, options, fetch }) {
     const data = await fetch({
-      query: options.query,
+      query: categoryId ? query.CollectionOne : options.query,
       method: options?.method,
       variables: getSearchVariables(input),
     })
 
-    const edges = data.products?.edges ?? []
+    let edges
+
+    if (categoryId) {
+      edges = data.collection?.products?.edges ?? []
+      // FIXME @zaiste, no `vendor` in Saleor
+      // if (brandId) {
+      //   edges = edges.filter(
+      //     ({ node: { vendor } }: ProductCountableEdge) =>
+      //       vendor.replace(/\s+/g, '-').toLowerCase() === brandId
+      //   )
+      // }
+    } else {
+      edges = data.products?.edges ?? []
+    }
 
     return {
-      products: edges.map(({ node }: ProductCountableEdge) =>
-        normalizeProduct(node)
-      ),
+      products: edges.map(({ node }: ProductCountableEdge) => normalizeProduct(node)),
       found: !!edges.length,
     }
   },

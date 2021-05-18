@@ -1,25 +1,19 @@
 import { CollectionCountableEdge } from '../schema'
 import { getConfig, SaleorConfig } from '../api'
-import getAllCollectionsQuery from '../utils/queries/get-all-collections-query'
+import * as query from '../utils/queries'
 
-const getAllCollections = async (options?: {
-  variables?: any
-  config: SaleorConfig
-  preview?: boolean
-}) => {
+const getAllCollections = async (options?: { variables?: any; config: SaleorConfig; preview?: boolean }) => {
   let { config, variables = { first: 100 } } = options ?? {}
   config = getConfig(config)
 
-  const { data } = await config.fetch(getAllCollectionsQuery, { variables })
+  const { data } = await config.fetch(query.CollectionMany, { variables })
   const edges = data.collections?.edges ?? []
 
-  const categories = edges.map(
-    ({ node: { id: entityId, name, slug } }: CollectionCountableEdge) => ({
-      entityId,
-      name,
-      path: `/${slug}`,
-    })
-  )
+  const categories = edges.map(({ node: { id: entityId, name, slug } }: CollectionCountableEdge) => ({
+    entityId,
+    name,
+    path: `/${slug}`,
+  }))
 
   return {
     categories,

@@ -20,10 +20,8 @@ export type UseRemoveItem<
   >
 > = ReturnType<H['useHook']>
 
-export const fetcher: HookFetcherFn<
-  Cart | null,
-  RemoveCartItemBody
-> = mutationFetcher
+export const fetcher: HookFetcherFn<Cart | null, RemoveCartItemBody> =
+  mutationFetcher
 
 const fn = (provider: Provider) => provider.cart?.useRemoveItem!
 

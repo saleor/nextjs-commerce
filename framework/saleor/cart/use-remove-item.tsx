@@ -1,20 +1,11 @@
 import { useCallback } from 'react'
-import type {
-  MutationHookContext,
-  HookFetcherContext,
-} from '@commerce/utils/types'
+import type { MutationHookContext, HookFetcherContext } from '@commerce/utils/types'
 import { RemoveCartItemBody } from '@commerce/types'
 import { ValidationError } from '@commerce/utils/errors'
-import useRemoveItem, {
-  RemoveItemInput as RemoveItemInputBase,
-  UseRemoveItem,
-} from '@commerce/cart/use-remove-item'
+import useRemoveItem, { RemoveItemInput as RemoveItemInputBase, UseRemoveItem } from '@commerce/cart/use-remove-item'
 import useCart from './use-cart'
-import {
-  checkoutLineItemRemoveMutation,
-  getCheckoutId,
-  checkoutToCart,
-} from '../utils'
+import * as mutation from '../utils/mutations'
+import { getCheckoutId, checkoutToCart } from '../utils'
 import { Cart, LineItem } from '../types'
 import { Mutation, MutationCheckoutLineDeleteArgs } from '../schema'
 
@@ -22,25 +13,14 @@ export type RemoveItemFn<T = any> = T extends LineItem
   ? (input?: RemoveItemInput<T>) => Promise<Cart | null>
   : (input: RemoveItemInput<T>) => Promise<Cart | null>
 
-export type RemoveItemInput<T = any> = T extends LineItem
-  ? Partial<RemoveItemInputBase>
-  : RemoveItemInputBase
+export type RemoveItemInput<T = any> = T extends LineItem ? Partial<RemoveItemInputBase> : RemoveItemInputBase
 
 export default useRemoveItem as UseRemoveItem<typeof handler>
 
 export const handler = {
-  fetchOptions: {
-    query: checkoutLineItemRemoveMutation,
-  },
-  async fetcher({
-    input: { itemId },
-    options,
-    fetch,
-  }: HookFetcherContext<RemoveCartItemBody>) {
-    const { checkoutLineDelete } = await fetch<
-      Mutation,
-      MutationCheckoutLineDeleteArgs
-    >({
+  fetchOptions: { query: mutation.CheckoutLineDelete },
+  async fetcher({ input: { itemId }, options, fetch }: HookFetcherContext<RemoveCartItemBody>) {
+    const { checkoutLineDelete } = await fetch<Mutation, MutationCheckoutLineDeleteArgs>({
       ...options,
       variables: {
         checkoutId: getCheckoutId().checkoutId,

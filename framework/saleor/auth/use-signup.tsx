@@ -3,33 +3,25 @@ import type { MutationHook } from '@commerce/utils/types'
 import { CommerceError } from '@commerce/utils/errors'
 import useSignup, { UseSignup } from '@commerce/auth/use-signup'
 import useCustomer from '../customer/use-customer'
-import {
-  AccountRegisterInput,
-  Mutation,
-  MutationAccountRegisterArgs,
-} from '../schema'
+import { AccountRegisterInput, Mutation, MutationAccountRegisterArgs } from '../schema'
 
-import { customerCreateMutation } from '../utils/mutations'
+import * as mutation from '../utils/mutations'
 import { handleAutomaticLogin, throwUserErrors } from '../utils'
 
 export default useSignup as UseSignup<typeof handler>
 
 export const handler: MutationHook<null, {}, any, AccountRegisterInput> = {
   fetchOptions: {
-    query: customerCreateMutation,
+    query: mutation.AccountCreate,
   },
   async fetcher({ input: { email, password }, options, fetch }) {
     if (!(email && password)) {
       throw new CommerceError({
-        message:
-          'A first name, last name, email and password are required to signup',
+        message: 'A first name, last name, email and password are required to signup',
       })
     }
 
-    const { customerCreate } = await fetch<
-      Mutation,
-      MutationAccountRegisterArgs
-    >({
+    const { customerCreate } = await fetch<Mutation, MutationAccountRegisterArgs>({
       ...options,
       variables: {
         input: {

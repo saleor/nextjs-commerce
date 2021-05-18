@@ -1,5 +1,5 @@
-const getProductQuery = /* GraphQL */ `
-  query getProductBySlug($slug: String!, $channel: String = "default-channel") {
+export const ProductOneBySlug = /* GraphQL */ `
+  query ProductOneBySlug($slug: String!, $channel: String = "default-channel") {
     product(slug: $slug, channel: $channel) {
       id
       slug
@@ -41,5 +41,3 @@ const getProductQuery = /* GraphQL */ `
     }
   }
 `
-
-export default getProductQuery

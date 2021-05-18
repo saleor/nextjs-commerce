@@ -1,5 +1,5 @@
 import { getConfig, SaleorConfig } from '../api'
-import getCustomerIdQuery from '../utils/queries/get-customer-id-query'
+import * as query from '../utils/queries'
 import Cookies from 'js-cookie'
 
 async function getCustomerId({
@@ -11,10 +11,9 @@ async function getCustomerId({
 }): Promise<number | undefined> {
   config = getConfig(config)
 
-  const { data } = await config.fetch(getCustomerIdQuery, {
+  const { data } = await config.fetch(query.CustomerOne, {
     variables: {
-      customerAccesToken:
-        customerAccesToken || Cookies.get(config.customerCookie),
+      customerAccesToken: customerAccesToken || Cookies.get(config.customerCookie),
     },
   })
 

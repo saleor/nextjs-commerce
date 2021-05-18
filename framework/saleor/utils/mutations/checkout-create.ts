@@ -1,24 +1,20 @@
-import { checkoutDetailsFragment } from '../queries/get-checkout-query'
+import * as fragment from '../fragments'
 
-const checkoutCreateMutation = /* GraphQL */ `
-  mutation createCheckout {
-    checkoutCreate(
-      input: {
-        email: "customer@example.com"
-        lines: []
-        channel: "default-channel"
-      }
-    ) {
+export const CheckoutCreate = /* GraphQL */ `
+  mutation CheckoutCreate {
+    checkoutCreate(input: {
+      email: "customer@example.com", 
+      lines: [], 
+      channel: "default-channel"
+    }) {
       errors {
         code
         field
         message
       }
-      checkout {
-        ...checkoutDetails
+      checkout { 
+        ${fragment.CheckoutDetails}
       }
     }
   }
-  ${checkoutDetailsFragment}
 `
-export default checkoutCreateMutation

@@ -1,9 +1,14 @@
-export { default as getSiteCollectionsQuery } from './get-all-collections-query'
-export { default as getProductQuery } from './get-product-query'
-export { default as getAllProductsQuery } from './get-all-products-query'
-export { default as getAllProductsPathtsQuery } from './get-all-products-paths-query'
-export { default as getAllProductVendors } from './get-all-product-vendors-query'
-export { default as getCheckoutQuery } from './get-checkout-query'
-export { default as getAllPagesQuery } from './get-all-pages-query'
-export { default as getPageQuery } from './get-page-query'
-export { default as getCustomerQuery } from './get-customer-query'
+export { CollectionMany } from './collection-many'
+export { ProductOneBySlug } from './product-one-by-slug'
+export { ProductMany } from './product-many'
+export { CollectionOne } from './collection-one'
+export { CheckoutOne } from './checkout-one'
+export { PageMany } from './page-many'
+export { PageOne } from './page-one'
+export { CustomerCurrent } from './customer-current'
+
+// getCustomerIdQuery
+export { CustomerOne } from './customer-one'
+
+export { getAllProductsPathsQuery } from './get-all-products-paths-query'
+export { getAllProductVendors } from './get-all-product-vendors-query'

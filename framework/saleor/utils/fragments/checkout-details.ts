@@ -1,9 +1,8 @@
-export const checkoutDetailsFragment = /* GraphQL */ `
+export const CheckoutDetails = /* GraphQL */ `
   fragment checkoutDetails on Checkout {
     id
     token
     created
-
     totalPrice {
       currency
       gross {
@@ -16,7 +15,6 @@ export const checkoutDetailsFragment = /* GraphQL */ `
         amount
       }
     }
-
     lines {
       id
       variant {
@@ -47,15 +45,3 @@ export const checkoutDetailsFragment = /* GraphQL */ `
     }
   }
 `
-
-const getCheckoutQuery = /* GraphQL */ `
-  query ($checkoutId: UUID!) {
-    checkout(token: $checkoutId) {
-      ... on Checkout {
-        ...checkoutDetails
-      }
-    }
-  }
-  ${checkoutDetailsFragment}
-`
-export default getCheckoutQuery

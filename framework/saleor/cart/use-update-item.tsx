@@ -1,21 +1,17 @@
 import { useCallback } from 'react'
 import debounce from 'lodash.debounce'
-import type {
-  HookFetcherContext,
-  MutationHookContext,
-} from '@commerce/utils/types'
+import type { HookFetcherContext, MutationHookContext } from '@commerce/utils/types'
 import { ValidationError } from '@commerce/utils/errors'
-import useUpdateItem, {
-  UpdateItemInput as UpdateItemInputBase,
-  UseUpdateItem,
-} from '@commerce/cart/use-update-item'
+import useUpdateItem, { UpdateItemInput as UpdateItemInputBase, UseUpdateItem } from '@commerce/cart/use-update-item'
 
 import useCart from './use-cart'
 import { handler as removeItemHandler } from './use-remove-item'
 import type { Cart, LineItem, UpdateCartItemBody } from '../types'
 import { checkoutToCart } from '../utils'
-import { getCheckoutId, checkoutLineItemUpdateMutation } from '../utils'
+import { getCheckoutId } from '../utils'
 import { Mutation, MutationCheckoutLinesUpdateArgs } from '../schema'
+
+import * as mutation from '../utils/mutations'
 
 export type UpdateItemInput<T = any> = T extends LineItem
   ? Partial<UpdateItemInputBase<LineItem>>
@@ -24,14 +20,8 @@ export type UpdateItemInput<T = any> = T extends LineItem
 export default useUpdateItem as UseUpdateItem<typeof handler>
 
 export const handler = {
-  fetchOptions: {
-    query: checkoutLineItemUpdateMutation,
-  },
-  async fetcher({
-    input: { itemId, item },
-    options,
-    fetch,
-  }: HookFetcherContext<UpdateCartItemBody>) {
+  fetchOptions: { query: mutation.CheckoutLineUpdate },
+  async fetcher({ input: { itemId, item }, options, fetch }: HookFetcherContext<UpdateCartItemBody>) {
     if (Number.isInteger(item.quantity)) {
       // Also allow the update hook to remove an item if the quantity is lower than 1
       if (item.quantity! < 1) {
@@ -48,10 +38,7 @@ export const handler = {
     }
 
     const checkoutId = getCheckoutId().checkoutId
-    const { checkoutLinesUpdate } = await fetch<
-      Mutation,
-      MutationCheckoutLinesUpdateArgs
-    >({
+    const { checkoutLinesUpdate } = await fetch<Mutation, MutationCheckoutLinesUpdateArgs>({
       ...options,
       variables: {
         checkoutId,
