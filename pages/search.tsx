@@ -50,7 +50,10 @@ export async function getStaticProps({
   }
 }
 
-export default function Search({ categories, brands }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Search({
+  categories,
+  brands,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const [activeFilter, setActiveFilter] = useState('')
   const [toggleFilter, setToggleFilter] = useState(false)
 

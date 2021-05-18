@@ -57,14 +57,12 @@ export type HookSWRInput = [string, HookInputValue][]
 
 export type HookFetchInput = { [k: string]: HookInputValue }
 
-export type HookFunction<
-  Input extends { [k: string]: unknown } | null,
-  T
-> = keyof Input extends never
-  ? () => T
-  : Partial<Input> extends Input
-  ? (input?: Input) => T
-  : (input: Input) => T
+export type HookFunction<Input extends { [k: string]: unknown } | null, T> =
+  keyof Input extends never
+    ? () => T
+    : Partial<Input> extends Input
+    ? (input?: Input) => T
+    : (input: Input) => T
 
 export type SWRHook<
   // Data obj returned by the hook and fetch operation
