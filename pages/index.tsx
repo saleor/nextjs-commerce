@@ -19,6 +19,7 @@ export async function getStaticProps({
     variables: { first: 12 },
     config,
     preview,
+    featured: true
   })
 
   const { categories, brands } = await getSiteInfo({ config, preview })
