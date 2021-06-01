@@ -1,7 +1,5 @@
 export type Maybe<T> = T | null
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K]
-}
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
 /** All built-in and custom scalars, mapped to their actual values */
@@ -1330,7 +1328,7 @@ export type CategoryTranslation = Node & {
   id: Scalars['ID']
   seoTitle?: Maybe<Scalars['String']>
   seoDescription?: Maybe<Scalars['String']>
-  name: Scalars['String']
+  name?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['JSONString']>
   /** Translation language. */
   language: LanguageDisplay
@@ -2091,7 +2089,7 @@ export type CollectionTranslation = Node & {
   id: Scalars['ID']
   seoTitle?: Maybe<Scalars['String']>
   seoDescription?: Maybe<Scalars['String']>
-  name: Scalars['String']
+  name?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['JSONString']>
   /** Translation language. */
   language: LanguageDisplay
@@ -6753,6 +6751,7 @@ export type PageFilterInput = {
   search?: Maybe<Scalars['String']>
   metadata?: Maybe<Array<Maybe<MetadataInput>>>
   pageTypes?: Maybe<Array<Maybe<Scalars['ID']>>>
+  ids?: Maybe<Array<Maybe<Scalars['ID']>>>
 }
 
 /** The Relay compliant `PageInfo` type, containing data necessary to paginate this connection. */
@@ -6853,7 +6852,7 @@ export type PageTranslation = Node & {
   id: Scalars['ID']
   seoTitle?: Maybe<Scalars['String']>
   seoDescription?: Maybe<Scalars['String']>
-  title: Scalars['String']
+  title?: Maybe<Scalars['String']>
   content?: Maybe<Scalars['JSONString']>
   /** Translation language. */
   language: LanguageDisplay
@@ -8026,7 +8025,7 @@ export type ProductTranslation = Node & {
   id: Scalars['ID']
   seoTitle?: Maybe<Scalars['String']>
   seoDescription?: Maybe<Scalars['String']>
-  name: Scalars['String']
+  name?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['JSONString']>
   /** Translation language. */
   language: LanguageDisplay
@@ -9136,7 +9135,7 @@ export type ReducedRate = {
   /** Reduced VAT rate in percent. */
   rate: Scalars['Float']
   /** A type of goods. */
-  rateType: TaxRateType
+  rateType: Scalars['String']
 }
 
 /** Refresh JWT token. Mutation tries to take refreshToken from the input.If it fails it will try to take refreshToken from the http-only cookie -refreshToken. csrfToken is required when refreshToken is provided as a cookie. */
@@ -10276,35 +10275,6 @@ export type StockInput = {
   warehouse: Scalars['ID']
   /** Quantity of items available for sell. */
   quantity: Scalars['Int']
-}
-
-/** An enumeration. */
-export enum TaxRateType {
-  Accommodation = 'ACCOMMODATION',
-  AdmissionToCulturalEvents = 'ADMISSION_TO_CULTURAL_EVENTS',
-  AdmissionToEntertainmentEvents = 'ADMISSION_TO_ENTERTAINMENT_EVENTS',
-  AdmissionToSportingEvents = 'ADMISSION_TO_SPORTING_EVENTS',
-  Advertising = 'ADVERTISING',
-  AgriculturalSupplies = 'AGRICULTURAL_SUPPLIES',
-  BabyFoodstuffs = 'BABY_FOODSTUFFS',
-  Bikes = 'BIKES',
-  Books = 'BOOKS',
-  ChildrensClothing = 'CHILDRENS_CLOTHING',
-  DomesticFuel = 'DOMESTIC_FUEL',
-  DomesticServices = 'DOMESTIC_SERVICES',
-  EBooks = 'E_BOOKS',
-  Foodstuffs = 'FOODSTUFFS',
-  Hotels = 'HOTELS',
-  Medical = 'MEDICAL',
-  Newspapers = 'NEWSPAPERS',
-  PassengerTransport = 'PASSENGER_TRANSPORT',
-  Pharmaceuticals = 'PHARMACEUTICALS',
-  PropertyRenovations = 'PROPERTY_RENOVATIONS',
-  Restaurants = 'RESTAURANTS',
-  SocialHousing = 'SOCIAL_HOUSING',
-  Standard = 'STANDARD',
-  Water = 'WATER',
-  Wine = 'WINE',
 }
 
 /** Representation of tax types fetched from tax gateway. */
@@ -11448,41 +11418,4 @@ export type GetAllProductPathsQuery = { __typename?: 'Query' } & {
       >
     }
   >
-}
-
-export type ProductConnectionFragment = {
-  __typename?: 'ProductCountableConnection'
-} & {
-  pageInfo: { __typename?: 'PageInfo' } & Pick<PageInfo, 'hasNextPage' | 'hasPreviousPage'>
-  edges: Array<
-    { __typename?: 'ProductCountableEdge' } & {
-      node: { __typename?: 'Product' } & Pick<Product, 'id' | 'name' | 'description' | 'slug'> & {
-          pricing?: Maybe<
-            { __typename?: 'ProductPricingInfo' } & {
-              priceRange?: Maybe<
-                { __typename?: 'TaxedMoneyRange' } & {
-                  start?: Maybe<
-                    { __typename?: 'TaxedMoney' } & {
-                      net: { __typename?: 'Money' } & Pick<Money, 'amount'>
-                    }
-                  >
-                }
-              >
-            }
-          >
-          media?: Maybe<Array<{ __typename?: 'ProductMedia' } & Pick<ProductMedia, 'url' | 'alt'>>>
-        }
-    }
-  >
-}
-
-export type GetAllProductsQueryVariables = Exact<{
-  first?: Maybe<Scalars['Int']>
-  filter?: Maybe<ProductFilterInput>
-  sortBy?: Maybe<ProductOrder>
-  channel?: Maybe<Scalars['String']>
-}>
-
-export type GetAllProductsQuery = { __typename?: 'Query' } & {
-  products?: Maybe<{ __typename?: 'ProductCountableConnection' } & ProductConnectionFragment>
 }

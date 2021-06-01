@@ -27,7 +27,7 @@ const getAllProducts = async (options: {
 
   if (featured) {
     const { data }: GraphQLFetcherResult = await config.fetch(query.CollectionOne, {
-      variables: { ...variables, categoryId: 'Q29sbGVjdGlvbjoxOQ==' },
+      variables: { ...variables, categoryId: 'Q29sbGVjdGlvbjo0' },
     })
 
     debugger

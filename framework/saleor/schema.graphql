@@ -1994,7 +1994,7 @@ type CategoryTranslation implements Node {
   id: ID!
   seoTitle: String
   seoDescription: String
-  name: String!
+  name: String
   description: JSONString
 
   """
@@ -3158,7 +3158,7 @@ type CollectionTranslation implements Node {
   id: ID!
   seoTitle: String
   seoDescription: String
-  name: String!
+  name: String
   description: JSONString
 
   """
@@ -10921,6 +10921,7 @@ input PageFilterInput {
   search: String
   metadata: [MetadataInput]
   pageTypes: [ID]
+  ids: [ID]
 }
 
 """
@@ -11084,7 +11085,7 @@ type PageTranslation implements Node {
   id: ID!
   seoTitle: String
   seoDescription: String
-  title: String!
+  title: String
   content: JSONString
 
   """
@@ -12887,7 +12888,7 @@ type ProductTranslation implements Node {
   id: ID!
   seoTitle: String
   seoDescription: String
-  name: String!
+  name: String
   description: JSONString
 
   """
@@ -15244,7 +15245,7 @@ type ReducedRate {
   """
   A type of goods.
   """
-  rateType: TaxRateType!
+  rateType: String!
 }
 
 """
@@ -17111,37 +17112,6 @@ input StockInput {
   Quantity of items available for sell.
   """
   quantity: Int!
-}
-
-"""
-An enumeration.
-"""
-enum TaxRateType {
-  ACCOMMODATION
-  ADMISSION_TO_CULTURAL_EVENTS
-  ADMISSION_TO_ENTERTAINMENT_EVENTS
-  ADMISSION_TO_SPORTING_EVENTS
-  ADVERTISING
-  AGRICULTURAL_SUPPLIES
-  BABY_FOODSTUFFS
-  BIKES
-  BOOKS
-  CHILDRENS_CLOTHING
-  DOMESTIC_FUEL
-  DOMESTIC_SERVICES
-  E_BOOKS
-  FOODSTUFFS
-  HOTELS
-  MEDICAL
-  NEWSPAPERS
-  PASSENGER_TRANSPORT
-  PHARMACEUTICALS
-  PROPERTY_RENOVATIONS
-  RESTAURANTS
-  SOCIAL_HOUSING
-  STANDARD
-  WATER
-  WINE
 }
 
 """
