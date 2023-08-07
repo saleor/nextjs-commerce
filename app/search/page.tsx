@@ -7,11 +7,11 @@ export const runtime = 'edge';
 
 export const metadata = {
   title: 'Search',
-  description: 'Search for products in the store.'
+  description: 'Search for products in the store.',
 };
 
 export default async function SearchPage({
-  searchParams
+  searchParams,
 }: {
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
@@ -24,7 +24,7 @@ export default async function SearchPage({
   return (
     <>
       {searchValue ? (
-        <p>
+        <p className="mb-4">
           {products.length === 0
             ? 'There are no products that match '
             : `Showing ${products.length} ${resultsText} for `}
@@ -32,7 +32,7 @@ export default async function SearchPage({
         </p>
       ) : null}
       {products.length > 0 ? (
-        <Grid className="grid-cols-2 lg:grid-cols-3">
+        <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <ProductGridItems products={products} />
         </Grid>
       ) : null}

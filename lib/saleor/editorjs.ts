@@ -37,7 +37,7 @@ const parseEditorJson = (content: string): EditorJsResponse | null => {
     invariant(Array.isArray(data.blocks), `Invalid shape`);
     invariant(
       data.blocks.every((item) => 'type' in item && 'data' in item),
-      `Invalid shape`
+      `Invalid shape`,
     );
     return data;
   } catch (err) {
@@ -87,6 +87,6 @@ function header({ level, text }: EditorJsHeaderBlock['data']): string {
   return `<h${level}>${text}</h${level}>`;
 }
 
-function quote({ text, caption, alignment }: EditorJsQuoteBlock['data']): string {
+function quote({ text, caption }: EditorJsQuoteBlock['data']): string {
   return `<blockquote><p>${text}</p> - <cite>${caption}</cite></blockquote>`;
 }

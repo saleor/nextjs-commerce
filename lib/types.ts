@@ -201,6 +201,8 @@ export type VercelCommerceCollectionProductsOperation = {
   };
   variables: {
     handle: string;
+    reverse?: boolean;
+    sortKey?: string;
   };
 };
 
