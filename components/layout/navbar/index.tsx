@@ -18,7 +18,7 @@ export default async function Navbar() {
         <MobileMenu menu={menu} />
       </div>
       <div className="flex w-full items-center">
-        <div className="flex w-full md:w-1/3">
+        <div className="flex w-full md:w-5/12">
           <Link
             href="/"
             aria-label="Go back home"
@@ -44,10 +44,10 @@ export default async function Navbar() {
             </ul>
           ) : null}
         </div>
-        <div className="hidden justify-center md:flex md:w-1/3">
+        <div className="hidden justify-center md:flex md:w-3/12">
           <Search />
         </div>
-        <div className="flex justify-end md:w-1/3">
+        <div className="flex justify-end md:w-4/12">
           <Suspense fallback={<OpenCart />}>
             <Cart />
           </Suspense>

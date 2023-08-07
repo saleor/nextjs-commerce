@@ -240,6 +240,11 @@ export async function getCollectionProducts({
   reverse?: boolean;
   sortKey?: ProductOrderField;
 }): Promise<Product[]> {
+  if (typeof reverse === 'undefined' && typeof sortKey === 'undefined') {
+    reverse = true;
+    sortKey = ProductOrderField.Name;
+  }
+
   const saleorCollectionProducts =
     (await _getCollectionProducts({
       collection,
