@@ -1,6 +1,14 @@
-query GetCategoryProductsBySlug($slug: String!) {
+query GetCategoryProductsBySlug(
+  $slug: String!
+  $sortBy: ProductOrderField!
+  $sortDirection: OrderDirection!
+) {
   category(slug: $slug) {
-    products(channel: "default-channel", first: 100) {
+    products(
+      channel: "default-channel"
+      first: 100
+      sortBy: { field: $sortBy, direction: $sortDirection }
+    ) {
       edges {
         node {
           id

@@ -66,7 +66,6 @@ export async function saleorFetch<Result, Variables>({
   const body = (await result.json()) as GraphQlErrorRespone<Result>;
 
   if ('errors' in body) {
-    console.dir({ query, variables, body }, { depth: 999 });
     throw body.errors[0];
   }
 
@@ -197,7 +196,10 @@ const _getCollectionProducts = async ({
       query: GetCollectionProductsBySlugDocument,
       variables: {
         slug: collection,
-        sortBy: sortKey || ProductOrderField.Rating,
+        sortBy:
+          sortKey === ProductOrderField.Rank
+            ? ProductOrderField.Rating
+            : sortKey || ProductOrderField.Rating,
         sortDirection: reverse ? OrderDirection.Desc : OrderDirection.Asc,
       },
       tags: [TAGS.collections, TAGS.products],
@@ -217,7 +219,10 @@ const _getCategoryProducts = async ({
       query: GetCategoryProductsBySlugDocument,
       variables: {
         slug: category,
-        sortBy: sortKey || ProductOrderField.Rating,
+        sortBy:
+          sortKey === ProductOrderField.Rank
+            ? ProductOrderField.Rating
+            : sortKey || ProductOrderField.Rating,
         sortDirection: reverse ? OrderDirection.Desc : OrderDirection.Asc,
       },
       tags: [TAGS.collections, TAGS.products],
@@ -273,10 +278,18 @@ export async function getMenu(handle: string): Promise<Menu[]> {
     throw new Error(`Menu not found: ${handle}`);
   }
 
-  const result = flattenMenuItems(saleorMenu.menu.items).filter(
-    // unique by path
-    (item1, idx, arr) => arr.findIndex((item2) => item2.path === item1.path) === idx,
-  );
+  const saleorUrl = new URL(endpoint!);
+  saleorUrl.pathname = '';
+
+  const result = flattenMenuItems(saleorMenu.menu.items)
+    .filter(
+      // unique by path
+      (item1, idx, arr) => arr.findIndex((item2) => item2.path === item1.path) === idx,
+    )
+    .map((item) => ({
+      ...item,
+      path: item.path.replace('http://localhost:8000', saleorUrl.toString().slice(0, -1)),
+    }));
 
   if (handle === 'next-js-frontend-header-menu') {
     // limit number of items in header to 3
@@ -335,7 +348,11 @@ export async function getProducts({
     query: SearchProductsDocument,
     variables: {
       search: query || '',
-      sortBy: sortKey || (query ? ProductOrderField.Rank : ProductOrderField.Rating),
+      sortBy: query
+        ? sortKey || ProductOrderField.Rank
+        : sortKey === ProductOrderField.Rank
+        ? ProductOrderField.Rating
+        : sortKey || ProductOrderField.Rating,
       sortDirection: reverse ? OrderDirection.Desc : OrderDirection.Asc,
     },
     tags: [TAGS.products],

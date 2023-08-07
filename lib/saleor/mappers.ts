@@ -122,6 +122,7 @@ export function saleorCheckoutToVercelCart(checkout: CheckoutFragment): Cart {
       },
     },
     lines: checkout.lines.map((line) => {
+      const title = line.variant.name.trim() === line.variant.id ? '' : line.variant.name.trim();
       return {
         id: line.id,
         quantity: line.quantity,
@@ -133,7 +134,7 @@ export function saleorCheckoutToVercelCart(checkout: CheckoutFragment): Cart {
         },
         merchandise: {
           id: line.variant.id,
-          title: `${line.variant.product.name} - ${line.variant.name}`,
+          title,
           selectedOptions: line.variant.attributes.flatMap((attribute) => {
             return attribute.values.map((value) => {
               return {

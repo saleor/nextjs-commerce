@@ -26923,6 +26923,8 @@ export type GetCategoryBySlugQuery = {
 
 export type GetCategoryProductsBySlugQueryVariables = Exact<{
   slug: Scalars['String'];
+  sortBy: ProductOrderField;
+  sortDirection: OrderDirection;
 }>;
 
 export type GetCategoryProductsBySlugQuery = {
@@ -28057,9 +28059,13 @@ export const GetCategoryBySlugDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<GetCategoryBySlugQuery, GetCategoryBySlugQueryVariables>;
 export const GetCategoryProductsBySlugDocument = new TypedDocumentString(`
-    query GetCategoryProductsBySlug($slug: String!) {
+    query GetCategoryProductsBySlug($slug: String!, $sortBy: ProductOrderField!, $sortDirection: OrderDirection!) {
   category(slug: $slug) {
-    products(channel: "default-channel", first: 100) {
+    products(
+      channel: "default-channel"
+      first: 100
+      sortBy: {field: $sortBy, direction: $sortDirection}
+    ) {
       edges {
         node {
           id
