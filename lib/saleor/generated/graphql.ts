@@ -27318,6 +27318,35 @@ export type GetProductsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetProductsQuery = { products?: { edges: Array<{ node: { name: string } }> } | null };
 
+export type WebhookSubscriptionSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type WebhookSubscriptionSubscription = {
+  event?:
+    | { __typename: 'CategoryCreated'; category?: { id: string; slug: string } | null }
+    | { __typename: 'CategoryDeleted'; category?: { id: string; slug: string } | null }
+    | { __typename: 'CategoryUpdated'; category?: { id: string; slug: string } | null }
+    | { __typename: 'CollectionCreated'; collection?: { id: string; slug: string } | null }
+    | { __typename: 'CollectionDeleted'; collection?: { id: string; slug: string } | null }
+    | { __typename: 'CollectionUpdated'; collection?: { id: string; slug: string } | null }
+    | { __typename: 'ProductCreated'; product?: { id: string; slug: string } | null }
+    | { __typename: 'ProductDeleted'; product?: { id: string; slug: string } | null }
+    | { __typename: 'ProductUpdated'; product?: { id: string; slug: string } | null }
+    | {
+        __typename: 'ProductVariantCreated';
+        productVariant?: { product: { id: string; slug: string } } | null;
+      }
+    | {
+        __typename: 'ProductVariantDeleted';
+        productVariant?: { product: { id: string; slug: string } } | null;
+      }
+    | {
+        __typename: 'ProductVariantUpdated';
+        productVariant?: { product: { id: string; slug: string } } | null;
+      }
+    | {}
+    | null;
+};
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -28647,3 +28676,102 @@ export const GetProductsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetProductsQuery, GetProductsQueryVariables>;
+export const WebhookSubscriptionDocument = new TypedDocumentString(`
+    subscription WebhookSubscription {
+  event {
+    ... on CategoryCreated {
+      __typename
+      category {
+        id
+        slug
+      }
+    }
+    ... on CategoryDeleted {
+      __typename
+      category {
+        id
+        slug
+      }
+    }
+    ... on CategoryUpdated {
+      __typename
+      category {
+        id
+        slug
+      }
+    }
+    ... on CollectionUpdated {
+      __typename
+      collection {
+        id
+        slug
+      }
+    }
+    ... on CollectionDeleted {
+      __typename
+      collection {
+        id
+        slug
+      }
+    }
+    ... on CollectionCreated {
+      __typename
+      collection {
+        id
+        slug
+      }
+    }
+    ... on ProductCreated {
+      __typename
+      product {
+        id
+        slug
+      }
+    }
+    ... on ProductDeleted {
+      __typename
+      product {
+        id
+        slug
+      }
+    }
+    ... on ProductUpdated {
+      __typename
+      product {
+        id
+        slug
+      }
+    }
+    ... on ProductVariantCreated {
+      __typename
+      productVariant {
+        product {
+          id
+          slug
+        }
+      }
+    }
+    ... on ProductVariantDeleted {
+      __typename
+      productVariant {
+        product {
+          id
+          slug
+        }
+      }
+    }
+    ... on ProductVariantUpdated {
+      __typename
+      productVariant {
+        product {
+          id
+          slug
+        }
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<
+  WebhookSubscriptionSubscription,
+  WebhookSubscriptionSubscriptionVariables
+>;

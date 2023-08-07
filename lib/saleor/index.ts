@@ -1,5 +1,6 @@
 import { TAGS } from 'lib/constants';
 import { Cart, Collection, Menu, Page, Product } from 'lib/types';
+import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   CheckoutAddLineDocument,
@@ -22,6 +23,7 @@ import {
   SearchProductsDocument,
   TypedDocumentString,
 } from './generated/graphql';
+import { verifySignature } from './jwks';
 import { saleorCheckoutToVercelCart, saleorProductToVercelProduct } from './mappers';
 import { invariant } from './utils';
 
@@ -494,6 +496,32 @@ export async function getProductRecommendations(productId: string): Promise<Prod
 
 // eslint-disable-next-line no-unused-vars
 export async function revalidate(req: NextRequest): Promise<Response> {
-  // @todo
+  const json = await verifySignature(req, endpoint!);
+  console.log(json);
+  if (!json || !('__typename' in json)) {
+    return NextResponse.json({ status: 204 });
+  }
+
+  switch (json.__typename) {
+    case 'CategoryCreated':
+    case 'CategoryUpdated':
+    case 'CategoryDeleted':
+    case 'CollectionCreated':
+    case 'CollectionUpdated':
+    case 'CollectionDeleted':
+      console.log(`revalidateTag(TAGS.collections)`);
+      revalidateTag(TAGS.collections);
+      break;
+    case 'ProductVariantCreated':
+    case 'ProductVariantUpdated':
+    case 'ProductVariantDeleted':
+    case 'ProductCreated':
+    case 'ProductUpdated':
+    case 'ProductDeleted':
+      console.log(`revalidateTag(TAGS.products)`);
+      revalidateTag(TAGS.products);
+      break;
+  }
+  console.log('Done revalidating');
   return NextResponse.json({ status: 204 });
 }

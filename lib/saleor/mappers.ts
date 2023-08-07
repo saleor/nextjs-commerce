@@ -11,7 +11,7 @@ export function saleorProductToVercelProduct(
       .map((media) => {
         return {
           url: media.url,
-          altText: media.alt,
+          altText: media.alt || product.seoTitle || product.name,
           width: 2048,
           height: 2048,
         };

@@ -1,0 +1,94 @@
+subscription WebhookSubscription {
+  event {
+    ... on CategoryCreated {
+      __typename
+      category {
+        id
+        slug
+      }
+    }
+    ... on CategoryDeleted {
+      __typename
+      category {
+        id
+        slug
+      }
+    }
+    ... on CategoryUpdated {
+      __typename
+      category {
+        id
+        slug
+      }
+    }
+    ... on CollectionUpdated {
+      __typename
+      collection {
+        id
+        slug
+      }
+    }
+    ... on CollectionDeleted {
+      __typename
+      collection {
+        id
+        slug
+      }
+    }
+    ... on CollectionCreated {
+      __typename
+      collection {
+        id
+        slug
+      }
+    }
+    ... on ProductCreated {
+      __typename
+      product {
+        id
+        slug
+      }
+    }
+    ... on ProductDeleted {
+      __typename
+      product {
+        id
+        slug
+      }
+    }
+    ... on ProductUpdated {
+      __typename
+      product {
+        id
+        slug
+      }
+    }
+    ... on ProductVariantCreated {
+      __typename
+      productVariant {
+        product {
+          id
+          slug
+        }
+      }
+    }
+    ... on ProductVariantDeleted {
+      __typename
+      productVariant {
+        product {
+          id
+          slug
+        }
+      }
+    }
+    ... on ProductVariantUpdated {
+      __typename
+      productVariant {
+        product {
+          id
+          slug
+        }
+      }
+    }
+  }
+}
