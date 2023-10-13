@@ -1,5 +1,8 @@
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsaleor%2Fnextjs-commerce&env=COMPANY_NAME,TWITTER_CREATOR,TWITTER_SITE,SITE_NAME,SALEOR_INSTANCE_URL&project-name=saleor-nextjs-commerce&repository-name=saleor-nextjs-commerce&demo-title=Saleor%20Next.js%20Commerce&demo-description=Saleor%20%2B%20Next.js%2013%20%2B%20App%20Router-ready%20e-commerce%20template&demo-url=https%3A%2F%2Fsaleor-commerce.vercel.app%2F&demo-image=https%3A%2F%2Fsaleor-commerce.vercel.app%2Fscreenshot.png)
 
+> [!IMPORTANT]
+> For actual production work, we recommend using our official [Next.js Starter](https://github.com/saleor/storefront). This repository can be useful for comparing different commerce platforms that also use the [Next.js Commerce](https://nextjs.org/commerce) 
+
 # Next.js Commerce
 
 A Next.js 13 and App Router-ready e-commerce template featuring:
